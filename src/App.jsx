@@ -75,6 +75,12 @@ function App() {
           <div className="product-grid">
             {products.map(product => (
               <div key={product.id} className="card" onClick={() => setSelectedProductId(product.id)} style={{cursor: 'pointer'}}>
+
+                {/* --- PLACE THE NEW CODE HERE --- */}
+                <span className={`status-badge ${product.type}`}>
+                  {product.type === 'RAW_MATERIAL' ? '🌿 Sourced' :
+                   product.type === 'COMPONENT' ? '⚙️ In Process' : '📦 Final Product'}
+                </span>
                 <h3>{product.name}</h3>
                 <p><strong>Category:</strong> {product.type}</p>
                 <p><strong>Carbon Footprint:</strong> {product.baseCo2Impact} kg</p>
