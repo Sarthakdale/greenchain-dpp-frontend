@@ -157,3 +157,82 @@ h1 {
 .search-input:focus {
   border-color: #4caf50; /* GreenChain Green */
 }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  background: #252525;
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border-bottom: 4px solid #4caf50; /* GreenChain Brand Color */
+}
+
+.stat-card.urgent {
+  border-bottom: 4px solid #ff5252; /* Red for warnings */
+}
+
+.stat-icon { font-size: 2rem; }
+.stat-info h3 { margin: 0; font-size: 1.8rem; color: #fff; }
+.stat-info p { margin: 0; color: #888; font-size: 0.9rem; }
+
+/* --- STEP 3: ANALYTICS DASHBOARD STYLING --- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px 0 40px 0;
+}
+
+.stat-card {
+  background: #252525; /* Dark card background */
+  padding: 25px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 5px solid #4caf50; /* GreenChain Green */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.stat-card.urgent {
+  border-bottom: 5px solid #ff5252; /* Red for High Impact warning */
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+  background: #1a1a1a;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.stat-info h3 {
+  margin: 0;
+  font-size: 2rem;
+  color: #ffffff;
+}
+
+.stat-info p {
+  margin: 0;
+  color: #888;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.8rem;
+}

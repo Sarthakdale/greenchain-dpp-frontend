@@ -45,7 +45,9 @@ const handleStatusChange = (id, newStatus) => {
     setProducts(products.map(p => p.id === id ? updatedProduct : p));
   });
 };
-
+const totalProducts = products.length;
+const totalCo2 = products.reduce((sum, p) => sum + (p.baseCo2Impact || 0), 0).toFixed(1);
+const highImpactCount = products.filter(p => (p.baseCo2Impact || 0) > 10).length;
   // IF a product is selected, show the Timeline instead of the Dashboard
   if (selectedProductId) {
     return (
@@ -53,6 +55,31 @@ const handleStatusChange = (id, newStatus) => {
           {/* 1. Add this new Header section with the Toggle Button */}
           <div className="header-flex">
             <h1>🍃 GreenChain Dashboard</h1>
+            <div className="stats-grid">
+              <div className="stat-card">
+                <span className="stat-icon">📦</span>
+                <div className="stat-info">
+                  <h3>{totalProducts}</h3>
+                  <p>Total Products</p>
+                </div>
+              </div>
+
+              <div className="stat-card">
+                <span className="stat-icon">🌱</span>
+                <div className="stat-info">
+                  <h3>{totalCo2} kg</h3>
+                  <p>Total CO2 Footprint</p>
+                </div>
+              </div>
+
+              <div className="stat-card urgent">
+                <span className="stat-icon">⚠️</span>
+                <div className="stat-info">
+                  <h3>{highImpactCount}</h3>
+                  <p>High Impact Items</p>
+                </div>
+              </div>
+            </div>
             <button className="qr-button" onClick={() => setShowForm(!showForm)}>
               {showForm ? 'Close Form' : '+ Add New Product'}
             </button>
