@@ -236,3 +236,116 @@ h1 {
   letter-spacing: 1px;
   font-size: 0.8rem;
 }
+
+/* --- TIMELINE STYLING --- */
+
+/* 1. The Container: Pushes everything to the right and adds the vertical line */
+/* REPLACE YOUR EXISTING .timeline-container WITH THIS */
+.timeline-container {
+  position: relative;
+  max-width: 600px;           /* Strict width is REQUIRED for margin:auto to work */
+  margin: 0 auto;             /* Forces the block to the center of the screen */
+  padding-bottom: 50px;
+}
+
+/* 2. The Vertical Line: Draws the grey connection line */
+.timeline-container::before {
+  content: '';
+  position: absolute;
+  left: 24px;                 /* 24px from the left of the CENTERED container */
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #333;
+  border-radius: 2px;
+}
+
+/* 3. The Item: Flexbox to put Icon next to Text */
+.timeline-item {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+/* 4. The Icon: The circular bubble */
+.timeline-icon {
+  width: 50px;
+  height: 50px;
+  background: #1a1a1a;
+  border: 2px solid #4caf50;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+/* 5. The Content Box: The card with the text */
+.timeline-content {
+  background: #252525;
+  padding: 20px 30px;
+  border-radius: 12px;
+  flex: 1;
+  border-left: 4px solid #4caf50;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  text-align: left; /* Keeps the text inside the card readable */
+}
+
+.timeline-content h3 { margin: 0 0 10px 0; color: #fff; font-size: 1.2rem; }
+.timeline-content p { margin: 0; color: #aaa; font-size: 1rem; }
+.timeline-date { display: block; margin-top: 15px; font-size: 0.85rem; color: #4caf50; font-weight: bold; }
+
+
+/* 6. The Pulse Animation for the bottom "Live" dot */
+.timeline-icon.pulse {
+  background: #4caf50;
+  color: white;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+  70% { box-shadow: 0 0 0 15px rgba(76, 175, 80, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+}
+
+/* 7. Back Button Styling */
+.back-button {
+  background: #333;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+.back-button:hover { background: #555; }
+
+.timeline-header {
+  text-align: center;         /* Centers the text inside */
+  max-width: 600px;           /* Limits width so it doesn't stretch too far */
+  margin: 20px auto 40px auto; /* Top, Right(Auto), Bottom, Left(Auto) -> CENTERS IT */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.delete-button {
+  background: #2d2d2d;
+  border: 1px solid #ff5252;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 1.2rem;
+}
+
+.delete-button:hover {
+  background: #ff5252;
+  color: white;
+  transform: scale(1.1);
+}

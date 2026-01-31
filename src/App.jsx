@@ -2,6 +2,25 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import ProductDetails from './ProductDetails'; // Import the new component
 
+// --- STEP 1: DEFINE JOURNEY DATA ---
+const MOCK_TIMELINE = {
+  RAW_MATERIAL: [
+    { stage: "Source", location: "Nashik Farms, India", date: "2023-11-01", icon: "🌱" },
+    { stage: "Processing", location: "Gujarat Ginning Plant", date: "2023-11-15", icon: "⚙️" },
+    { stage: "Quality Check", location: "Mumbai Lab", date: "2023-11-20", icon: "✅" }
+  ],
+  COMPONENT: [
+    { stage: "Manufacturing", location: "Pune Industrial Zone", date: "2023-12-05", icon: "🏭" },
+    { stage: "Assembly", location: "Aurangabad Unit", date: "2023-12-10", icon: "🔧" },
+    { stage: "Transport", location: "On Route to Mumbai", date: "2023-12-12", icon: "🚚" }
+  ],
+  FINAL_PRODUCT: [
+    { stage: "Packaging", location: "Mumbai Logistics Hub", date: "2024-01-05", icon: "📦" },
+    { stage: "Distribution", location: "Global Port Terminal", date: "2024-01-10", icon: "🚢" },
+    { stage: "Retail", location: "Customer Storefront", date: "2024-01-20", icon: "🏪" }
+  ]
+};
+
 function App() {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -44,12 +63,73 @@ const handleStatusChange = (id, newStatus) => {
     // This refreshes the specific card with the new data from Java
     setProducts(products.map(p => p.id === id ? updatedProduct : p));
   });
+// --- DELETE FUNCTION ---
+  const handleDelete = (id, e) => {
+    e.stopPropagation(); // Prevents the card from opening the Timeline
+    if (confirm("Are you sure you want to delete this product?")) {
+      fetch(`http://localhost:8080/api/products/${id}`, { method: 'DELETE' })
+        .then(() => {
+          setProducts(products.filter(p => p.id !== id)); // Remove from screen
+        })
+        .catch(err => console.error("Error deleting:", err));
+    }
+  };
 };
 const totalProducts = products.length;
 const totalCo2 = products.reduce((sum, p) => sum + (p.baseCo2Impact || 0), 0).toFixed(1);
 const highImpactCount = products.filter(p => (p.baseCo2Impact || 0) > 10).length;
-  // IF a product is selected, show the Timeline instead of the Dashboard
+
+// --- NEW TIMELINE LOGIC ---
   if (selectedProductId) {
+    const product = products.find(p => p.id === selectedProductId);
+    if (!product) { setSelectedProductId(null); return null; }
+    const events = MOCK_TIMELINE[product.type] || MOCK_TIMELINE.FINAL_PRODUCT;
+
+    return (
+          <div className="app-container" style={{ padding: '40px' }}>
+            {/* 1. Back Button stays OUTSIDE so it sits on the left */}
+            <button className="back-button" onClick={() => setSelectedProductId(null)}>
+              ⬅ Back to Dashboard
+            </button>
+
+            {/* 2. THE NEW CENTERING WRAPPER */}
+            {/* This div forces everything inside it to be 600px wide and centered */}
+            <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+
+              <div className="timeline-header" style={{ marginTop: '20px', textAlign: 'center' }}>
+                <h1>{product.name} Journey</h1>
+                <span className={`status-badge ${product.type}`}>
+                  {product.type.replace('_', ' ')}
+                </span>
+              </div>
+
+              <div className="timeline-container">
+                {events.map((event, index) => (
+                  <div key={index} className="timeline-item">
+                    <div className="timeline-icon">{event.icon}</div>
+                    <div className="timeline-content">
+                      <h3>{event.stage}</h3>
+                      <p>📍 {event.location}</p>
+                      <span className="timeline-date">📅 {event.date}</span>
+                    </div>
+                  </div>
+                ))}
+
+                <div className="timeline-item active">
+                  <div className="timeline-icon pulse">📍</div>
+                  <div className="timeline-content">
+                    <h3>Live Status</h3>
+                    <p>Tracking Active</p>
+                  </div>
+                </div>
+              </div>
+            </div> {/* End of Centering Wrapper */}
+          </div>
+    );
+  }
+
+  // IF a product is selected, show the Timeline instead of the Dashboard
+
     return (
         <div className="app-container">
           {/* 1. Add this new Header section with the Toggle Button */}
@@ -170,7 +250,7 @@ const highImpactCount = products.filter(p => (p.baseCo2Impact || 0) > 10).length
           </div>
         </div>
     );
-  }
+
 
   return (
     <div className="app-container">
@@ -196,6 +276,28 @@ const highImpactCount = products.filter(p => (p.baseCo2Impact || 0) > 10).length
               >
                 View QR
               </button>
+              <div className="button-group">
+                  {/* 1. View QR Button */}
+                <button
+                  className="qr-button"
+                  onClick={(e) => {
+                      e.stopPropagation();
+                      window.open(`http://localhost:8080/api/products/${product.id}/qr`);
+                  }}
+              >
+                 View QR
+                 </button>
+
+                                {/* 2. The Delete Button (Trash Can) */}
+               <button
+                className="delete-button"
+                onClick={(e) => handleDelete(product.id, e)}
+                title="Delete Product"
+                style={{ marginLeft: '10px' }}
+               >
+                🗑️
+               </button>
+              </div>
             </div>
           </div>
         ))}
