@@ -4,6 +4,7 @@ import ProductDetails from './ProductDetails'; // Import the new component
 
 function App() {
   const [products, setProducts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedProductId, setSelectedProductId] = useState(null); // Track which product to show
 
   const [showForm, setShowForm] = useState(false); // Controls if the form is visible
@@ -31,6 +32,19 @@ function App() {
       .then(data => setProducts(data))
       .catch(error => console.error('Error connecting to backend:', error));
   }, []);
+
+const handleStatusChange = (id, newStatus) => {
+  fetch(`http://localhost:8080/api/products/${id}/status`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(newStatus)
+  })
+  .then(res => res.json())
+  .then(updatedProduct => {
+    // This refreshes the specific card with the new data from Java
+    setProducts(products.map(p => p.id === id ? updatedProduct : p));
+  });
+};
 
   // IF a product is selected, show the Timeline instead of the Dashboard
   if (selectedProductId) {
@@ -72,6 +86,14 @@ function App() {
           )}
 
           {/* 3. This is your existing grid, keep it inside the new structure */}
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="🔍 Search products by name..."
+              className="search-input"
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
           <div className="product-grid">
             {products.map(product => (
               <div key={product.id} className="card" onClick={() => setSelectedProductId(product.id)} style={{cursor: 'pointer'}}>
@@ -82,8 +104,28 @@ function App() {
                    product.type === 'COMPONENT' ? '⚙️ In Process' : '📦 Final Product'}
                 </span>
                 <h3>{product.name}</h3>
-                <p><strong>Category:</strong> {product.type}</p>
+                <div className="status-selector" onClick={(e) => e.stopPropagation()}>
+                  <strong>Update Status: </strong>
+                  <select
+                    value={product.type}
+                    className="status-dropdown"
+                    onChange={(e) => handleStatusChange(product.id, e.target.value)}
+                  >
+                    <option value="RAW_MATERIAL">🌿 Sourced</option>
+                    <option value="COMPONENT">⚙️ In Process</option>
+                    <option value="FINAL_PRODUCT">📦 Final Product</option>
+                  </select>
+                </div>
                 <p><strong>Carbon Footprint:</strong> {product.baseCo2Impact} kg</p>
+                <div className="co2-meter-bg">
+                  <div
+                    className="co2-meter-fill"
+                    style={{
+                      width: `${Math.min(product.baseCo2Impact * 5, 100)}%`,
+                      backgroundColor: product.baseCo2Impact > 10 ? '#ff5252' : '#4caf50'
+                    }}
+                  ></div>
+                </div>
 
                 <div className="button-group">
                   <button
@@ -108,7 +150,10 @@ function App() {
       <h1>🍃 GreenChain Dashboard</h1>
 
       <div className="product-grid">
-        {products.map(product => (
+        {products
+          .filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
+          .map(product => (
+            // ... keep the rest of your existing card code here ...
           <div key={product.id} className="card" onClick={() => setSelectedProductId(product.id)} style={{cursor: 'pointer'}}>
             <h3>{product.name}</h3>
             <p><strong>Category:</strong> {product.type}</p>

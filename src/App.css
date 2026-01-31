@@ -1,9 +1,22 @@
 .app-container {
   padding: 40px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #1a1a1a;
   color: white;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers the content block */
+  width: 100%;        /* Forces container to full screen width */
+  box-sizing: border-box;
+}
+
+.header-flex {
+  width: 100%;
+  max-width: 1200px; /* Limits width for better readability */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
 }
 
 h1 {
@@ -14,17 +27,23 @@ h1 {
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-  padding: 20px;
+  /* 'auto-fill' will create as many columns as possible to fill the right side */
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 30px;
+  width: 100%;
+  /* We use a very high max-width so it fills almost any laptop screen */
+  max-width: 1600px;
+  margin: 0 auto;
+  padding-bottom: 50px;
 }
 
 .card {
+  /* This ensures the cards themselves expand to fill their grid slot */
+  width: auto;
   background-color: #2d2d2d;
   border-radius: 12px;
-  padding: 20px;
+  padding: 25px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-  transition: transform 0.2s;
   border-left: 5px solid #4caf50;
 }
 
@@ -71,4 +90,70 @@ h1 {
 .details-text {
   color: #aaa;
   font-style: italic;
+}
+
+.co2-meter-bg {
+  width: 100%;
+  height: 8px;
+  background-color: #1a1a1a;
+  border-radius: 10px;
+  margin: 10px 0 20px 0;
+  overflow: hidden;
+  border: 1px solid #444;
+}
+
+.co2-meter-fill {
+  height: 100%;
+  transition: width 0.5s ease-in-out;
+  border-radius: 10px;
+}
+
+.status-selector {
+  margin: 15px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+
+.status-dropdown {
+  background-color: #1a1a1a;
+  color: #4caf50; /* Matches your GreenChain theme */
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 5px 10px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.status-dropdown:hover {
+  border-color: #4caf50;
+}
+
+.status-dropdown option {
+  background-color: #2d2d2d;
+  color: white;
+}
+
+.search-container {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 30px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 20px;
+  background-color: #2d2d2d;
+  border: 1px solid #444;
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.search-input:focus {
+  border-color: #4caf50; /* GreenChain Green */
 }
